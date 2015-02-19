@@ -5,6 +5,8 @@ var cloudinaryConfig = require('../config/cloudinary');
 
 var router = express.Router();
 
+cloudinary.config(cloudinaryConfig);
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	res.send('respond cloudinary results');
@@ -15,9 +17,9 @@ router.post('/', function(req, res, next) {
 			console.log(result);
 			res.send('Done:<br/> <img src="' + result.url + '"/><br/>' +
 			cloudinary.image(result.public_id, {
-				format: "png",
-				width: 100,
-				height: 130,
+				format: "jpg",
+				width: 480,
+				height: 640,
 				crop: "fill"
 			}));
 		},

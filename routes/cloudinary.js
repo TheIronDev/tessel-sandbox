@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-	stream = cloudinary.uploader.upload_stream(function(result) {
+	var stream = cloudinary.uploader.upload_stream(function(result) {
 			console.log(result);
 			res.send('Done:<br/> <img src="' + result.url + '"/><br/>' +
 			cloudinary.image(result.public_id, {

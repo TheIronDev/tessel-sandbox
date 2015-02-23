@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-	console.log('debugging whats wrong..');
+	console.log('Because I am submitting an image (and nothing else), req.body should be the image buffer, I think.');
 	console.log(req.body);
 	var stream = cloudinary.uploader.upload_stream(function(result) {
 			console.log(result);

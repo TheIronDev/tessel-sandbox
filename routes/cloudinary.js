@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
 	console.log('Because I am submitting an image (and nothing else), req.body should be the image buffer, I think.');
-	console.log('Trying stream.on("open") now.... makes sense why it wasn't working before.);
+	console.log('Trying stream.on("open") now.... makes sense why it wasnt working before');
 
 	var readStream = fs.createReadStream(req.body);
 

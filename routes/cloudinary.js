@@ -21,15 +21,22 @@ router.post('/', function(req, res, next) {
 			console.log('cloudinary is finished streaming... I think... maybe... stay tuned..');
 			console.log(result)
 		}),
-		writeStream = fs.createWriteStream('picture-' + newDate.toISOString() + '.jpg').pipe(req),
+		writeStream = fs.createWriteStream('picture-' + newDate.toISOString() + '.jpg'),
 		readStream;
 
-	// This pipes the POST data to the file
+	// This pipes the POST data to the file (because we are receiving an octet stream)
 	req.pipe(writeStream);
 
-	req.on('end', function () {
+	writeStream.on('data', function(result){
+		console.log('writing what should be streamable data... ');
+		console.log(result)
+	});
+
+	writeStream.on('end', function () {
 		console.log('req is finished write streaming, now it read streams...');
+
 		readStream = fs.createReadStream('picture-' + newDate.toISOString() + '.jpg').pipe(cloudinaryStream);
+
 		res.send('Writing finished, now lets let the readStream stream up to cloudinary');
 	});
 

@@ -25,25 +25,9 @@ router.post('/', function(req, res, next) {
 		readStream;
 
 	// This pipes the POST data to the file (because we are receiving an octet stream)
-	req.pipe(writeStream);
+	req.pipe(cloudinaryStream);
 
-	writeStream.on('data', function(result){
-		console.log('writing what should be streamable data... ');
-		console.log(result)
-	});
 
-	writeStream.on('end', function () {
-		console.log('req is finished write streaming, now it read streams...');
-
-		readStream = fs.createReadStream('picture-' + newDate.toISOString() + '.jpg').pipe(cloudinaryStream);
-
-		res.send('Writing finished, now lets let the readStream stream up to cloudinary');
-	});
-
-	// This is here incase any errors occur
-	writeStream.on('error', function (err) {
-		console.log(err);
-	});
 });
 
 module.exports = router;

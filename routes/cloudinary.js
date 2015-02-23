@@ -13,22 +13,29 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-	console.log('Because I am submitting an image (and nothing else), req.body should be the image buffer, I think.');
-	console.log('Trying stream.on("open") now.... makes sense why it wasnt working before');
 
-	var readStream = fs.createReadStream(req.body);
+	console.log('Streaming in so I can stream out to stream out.');
 
-	// This will wait until we know the readable stream is actually valid before piping
-	readStream.on('open', function () {
-		// This just pipes the read stream to the response object (which goes to the client)
-		readStream.pipe(cloudinary.uploader.upload_stream(function(result) {
-			console.log(result);
-		}));
+	var newDate = new Date(),
+		cloudinaryStream = cloudinary.uploader.upload_stream(function(result) {
+			console.log('cloudinary is finished streaming... I think... maybe... stay tuned..');
+			console.log(result)
+		}),
+		writeStream = fs.createWriteStream('picture-' + newDate.toISOString() + '.jpg').pipe(req),
+		readStream;
+
+	// This pipes the POST data to the file
+	req.pipe(writeStream);
+
+	req.on('end', function () {
+		console.log('req is finished write streaming, now it read streams...');
+		readStream = fs.createReadStream('picture-' + newDate.toISOString() + '.jpg').pipe(cloudinaryStream);
+		res.send('Writing finished, now lets let the readStream stream up to cloudinary');
 	});
 
-	// This catches any errors that happen while creating the readable stream (usually invalid names)
-	readStream.on('error', function(err) {
-		res.end(err);
+	// This is here incase any errors occur
+	writeStream.on('error', function (err) {
+		console.log(err);
 	});
 });
 
